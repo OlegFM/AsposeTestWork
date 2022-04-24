@@ -2,14 +2,24 @@
 using Aspose.Words.Notes;
 using System.Globalization;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace AsposeTestWork.Core
 {
     public class WordProcessor
     {
         private Document _file;
+        private readonly IConfiguration _configuration;
         private DocumentBuilder _docBuilder;
         private CultureInfo _translationLang;
+        private CultureInfo[] _possibleTranslationLangs;
+        private Translaters.ITranslateProvider _translater;
+
+        public WordProcessor(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _translater = new Translaters.Yandex.Translater(_configuration);
+        }
         public void ReadWordFile(string path)
         {
             _file = new Document(path);
@@ -21,9 +31,18 @@ namespace AsposeTestWork.Core
             _translationLang = culture;
         }
 
-        public void Translate()
+        public string Translate()
         {
-
+            CultureInfo detectedLang;
+            string text = AsposeTestProcessing();
+            detectedLang = _translater.DetectLanguage(text);
+            _possibleTranslationLangs = _translater.GetSupportedLanguages();
+            StringBuilder sb = new StringBuilder();
+            foreach (var translate in _translater.Translate(new string[] { text }, detectedLang, _translationLang))
+            {
+                sb.AppendLine(translate);
+            }
+            return sb.ToString();
         }
         public string AsposeTestProcessing()
         {

@@ -1,20 +1,21 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AsposeTestWork.Core;
 using System.Globalization;
+using Microsoft.Extensions.Configuration;
 
 string filePath = null;
 string lang = null;
 CultureInfo culture;
 CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-
+IConfiguration _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
 CheckPathToFile();
 CheckLang();
 
-WordProcessor processor = new WordProcessor();
+WordProcessor processor = new WordProcessor(_configuration);
 processor.ReadWordFile(filePath);
 processor.SetTranslationLang(culture);
-Console.WriteLine(processor.AsposeTestProcessing());
+Console.WriteLine(processor.Translate());
 
 
 void CheckPathToFile()
