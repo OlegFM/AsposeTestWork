@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsposeTestWork.Core", "Aspo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsposeTestWork.Console", "AsposeTestWork.Console\AsposeTestWork.Console.csproj", "{ECE3B58E-D4F5-426F-8C1C-D19BA0B5272B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B864390-ED91-4B8A-B1E7-6C3D851BAE87}"
+	ProjectSection(SolutionItems) = preProject
+		TestAssets\AsposeTestWordFile.docx = TestAssets\AsposeTestWordFile.docx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
