@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace AsposeTestWork.Core.Translaters.Yandex
 {
-    internal class Translater : ITranslateProvider, IDisposable
+    public class Translater : ITranslateProvider, IDisposable
     {
         private string _apiKey = "AQVNxMXvH8_ReOgBuzPr5cwN05qgBg__ypCauo66";
         private const string _baseUri = "https://translate.api.cloud.yandex.net/translate/v2/";
@@ -58,7 +58,7 @@ namespace AsposeTestWork.Core.Translaters.Yandex
             return listLanguagesResponse?.languages.Select(language => { return new CultureInfo(language.code); }).ToArray() ?? new CultureInfo[0];
         }
 
-        public string[] Translate(string[] texts, CultureInfo translateFrom, CultureInfo translateTo)
+        public string[] Translate(string[] texts, CultureInfo? translateFrom, CultureInfo translateTo)
         {
             TranslateResponse? translateResponse = new TranslateResponse();
             TranslateRequest translateRequest = new TranslateRequest()
@@ -66,7 +66,7 @@ namespace AsposeTestWork.Core.Translaters.Yandex
                 folderId = _folderId,
                 texts = texts.ToList<string>(),
                 targetLanguageCode = translateTo.TwoLetterISOLanguageName,
-                sourceLanguageCode = translateFrom.TwoLetterISOLanguageName
+                sourceLanguageCode = translateFrom?.TwoLetterISOLanguageName ?? ""
             };
             var content = new StringContent(JsonSerializer.Serialize(translateRequest), Encoding.UTF8, "application/json");
             var result = _httpClient.PostAsync("translate", content).Result;

@@ -1,8 +1,31 @@
-﻿@{
+﻿@using System.Runtime.Versioning
+@using AsposeTestWork.Web
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">@Localizer["WelcomeMessage"]</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<div class="row text-center">
+    <div class="col-12">
+        @{
+            ViewBag.Title = "Upload";
+        }
+        <h3>
+            @Localizer["SubmitUpload"]
+        </h3>
+        @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {   <input type="button" id="loadFileXml" value="Custom Button Name"onclick="document.getElementById('fileInput').click();" />       
+            <input type="file" class="inputfile1" id="fileInput" name="file" value=@Localizer["SubmitUpload"]/><br/>
+            <label for="fileInput">@Localizer["SubmitUpload"]</label>
+            <input type="submit" value=@Localizer["SubmitUpload"]/>          
+        }
+    </div>
+</div>
+<div class="text-center">
+     <p>@ViewBag.Translation</p>
 </div>

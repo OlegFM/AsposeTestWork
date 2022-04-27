@@ -9,7 +9,7 @@ namespace AsposeTestWork.Core.Translaters
 {
     internal interface ITranslateProvider
     {
-        public string[] Translate (string[] text, CultureInfo translateFrom, CultureInfo translateTo);
+        public string[] Translate (string[] text, CultureInfo? translateFrom, CultureInfo translateTo);
         public CultureInfo[] GetSupportedLanguages();
         public CultureInfo DetectLanguage(string text);
     }

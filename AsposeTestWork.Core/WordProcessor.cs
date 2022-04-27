@@ -35,10 +35,10 @@ namespace AsposeTestWork.Core
         {
             CultureInfo detectedLang;
             string text = AsposeTestProcessing();
-            detectedLang = _translater.DetectLanguage(text);
+           //detectedLang = _translater.DetectLanguage(text);
             _possibleTranslationLangs = _translater.GetSupportedLanguages();
             StringBuilder sb = new StringBuilder();
-            foreach (var translate in _translater.Translate(new string[] { text }, detectedLang, _translationLang))
+            foreach (var translate in _translater.Translate(new string[] { text }, null, _translationLang))
             {
                 sb.AppendLine(translate);
             }
