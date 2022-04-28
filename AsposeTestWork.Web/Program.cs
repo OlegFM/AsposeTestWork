@@ -31,7 +31,8 @@ app.UseRequestLocalization(localisationOptions);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseUnobtrusiveAjax();
-
+app.Urls.Clear();
+app.Urls.Add("http://*:" + Environment.GetEnvironmentVariable("PORT"));
 app.UseRouting();
 
 app.UseAuthorization();
