@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Resources;
 using AsposeTestWork.Web;
 using Microsoft.AspNetCore.Mvc.Razor;
+using AspNetCore.Unobtrusive.Ajax;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ builder.Services.AddControllersWithViews()
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
-    
+builder.Services.AddUnobtrusiveAjax();
 
 var app = builder.Build();
 
@@ -27,14 +28,13 @@ var localisationOptions = new RequestLocalizationOptions().SetDefaultCulture(sup
     .AddSupportedCultures(supportedCulture)
     .AddSupportedUICultures(supportedCulture);
 app.UseRequestLocalization(localisationOptions);
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseUnobtrusiveAjax();
 
 app.UseRouting();
 
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

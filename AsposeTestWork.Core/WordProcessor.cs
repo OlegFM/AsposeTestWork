@@ -65,7 +65,7 @@ namespace AsposeTestWork.Core
             {
                 if (paragraph.GetText().Contains("Evaluation Only. Created with Aspose.Words"))
                     continue;
-                sb.AppendLine(paragraph.GetText().Trim('\f') + Environment.NewLine);
+                sb.AppendLine(paragraph.GetText().Trim('\f'));
             }
             return sb.ToString();
         }
@@ -73,12 +73,12 @@ namespace AsposeTestWork.Core
         public string NotesProcessing(Document document)
         {
             StringBuilder sb = new StringBuilder();
-            foreach(Paragraph paragraph in document.FirstSection.Body)
+            foreach(Paragraph paragraph in document.FirstSection.Body.Paragraphs)
             {
                 var footnotes = paragraph.Where(n => n.NodeType == NodeType.Footnote);
                 foreach(Footnote footnote in footnotes)
                 {
-                    sb.AppendLine(footnote.GetText() + Environment.NewLine);
+                    sb.AppendLine(footnote.GetText());
                 }
             }
             return sb.ToString();
@@ -99,8 +99,12 @@ namespace AsposeTestWork.Core
             {
                 if (paragraph.GetText().Contains("Created with an evaluation copy of Aspose.Words."))
                     continue;
-                sb.AppendLine(paragraph.GetText() + Environment.NewLine);
+                sb.AppendLine(paragraph.GetText());
             }
+        }
+        public void Close()
+        {
+            _file = null;
         }
     }
 }

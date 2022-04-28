@@ -17,4 +17,19 @@
     <data name="WelcomeMessage" xml:space="preserve">
         <value>Добро пожаловать</value>
     </data>
+    <data name="UploadFileTab" xml:space="preserve">
+        <value>Перевод файла</value>
+    </data>
+    <data name="UploadUrlTab" xml:space="preserve">
+        <value>Перевод файла по URL</value>
+    </data>
+    <data name="IsFileNullMessage" xml:space="preserve">
+        <value>Не передан файл</value>
+    </data>
+    <data name="NotDocxOrNull" xml:space="preserve">
+        <value>Файл не является .docx или ресурс ответил неверно</value>
+    </data>
+    <data name="WelcomeParagraph" xml:space="preserve">
+        <value>Это тестовое вебприложение для перевода Word файлов. Моя жена любит пчёл, поэтому я сделал такой фон :-)</value>
+    </data>
 </root>

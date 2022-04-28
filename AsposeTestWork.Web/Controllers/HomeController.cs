@@ -16,13 +16,15 @@ namespace AsposeTestWork.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
-        private HomeViewModel _model = new HomeViewModel();
+        private HomeViewModel _model;
+        HttpClient _httpClient = new HttpClient();
 
         public HomeController(ILogger<HomeController> logger, IWebHostEnvironment hostEnvironment, IConfiguration configuration)
         {
             _logger = logger;
             _environment = hostEnvironment;
             _configuration = configuration;
+            _model = new HomeViewModel(hostEnvironment, configuration);
         }
 
         public IActionResult Index()
@@ -46,33 +48,29 @@ namespace AsposeTestWork.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public async Task<string> UploadFile(IFormFile file, string selectedLang)
         {
-            if (file != null)
-            {
-                new DirectoryInfo(_environment.WebRootPath).CreateSubdirectory("Files");
-                  
-                string path = "/Files/" + Path.GetRandomFileName() + Path.GetExtension(file.FileName);
-                using (var fileStream = new FileStream(_environment.WebRootPath + path, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-
-                var processor = new WordProcessor(_configuration);
-                processor.ReadWordFile(_environment.WebRootPath + path);
-                processor.SetTranslationLang(CultureInfo.CurrentCulture);
-                _model.Translation = processor.Translate();
-            }
-            return RedirectToAction("Index");
+            //TODO: Validation
+            return await _model.TranslateUploadedFile(file, selectedLang);
+        }
+        [HttpPost]
+        public async Task<string> UploadUrl(string url, string selectedLang)
+        {
+            string text = "Test";
+            new DirectoryInfo(_environment.WebRootPath).CreateSubdirectory("Files");
+            var uri = new Uri(url);
+            var response = await _httpClient.GetAsync(uri);
+            if (!response.Content.Headers.ContentDisposition?.FileName?.EndsWith(".docx") ?? true)
+                return Resources.Views.Home.Index.NotDocxOrNull;
+            return await _model.TranslateUrlFile(response, selectedLang);
         }
 
         public IActionResult ChangeCulture(string lang)
         {
-            string returnUrl = "https://localhost:7081/";
             var cookeVal = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(lang));
             Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, cookeVal);
             CultureInfo.CurrentCulture = new CultureInfo(lang);
-            return Redirect(returnUrl);
+            return RedirectToAction("Index");
         }
     }
 }

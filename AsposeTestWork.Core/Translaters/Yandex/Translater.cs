@@ -68,8 +68,11 @@ namespace AsposeTestWork.Core.Translaters.Yandex
                 targetLanguageCode = translateTo.TwoLetterISOLanguageName,
                 sourceLanguageCode = translateFrom?.TwoLetterISOLanguageName ?? ""
             };
+            var status = "";
             var content = new StringContent(JsonSerializer.Serialize(translateRequest), Encoding.UTF8, "application/json");
             var result = _httpClient.PostAsync("translate", content).Result;
+            if(result.StatusCode is System.Net.HttpStatusCode.BadRequest)
+                status = result.Content.ReadAsStringAsync().Result;
             result.EnsureSuccessStatusCode();
             Stream resultContent = result.Content.ReadAsStream();
             if(resultContent is not null)

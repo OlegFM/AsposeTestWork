@@ -1,6 +1,8 @@
 ﻿@using System.Runtime.Versioning
 @using AsposeTestWork.Web
 @using Microsoft.AspNetCore.Mvc.Localization
+@using AspNetCore.Unobtrusive.Ajax;
+@using System.Globalization
 @inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Home Page";
@@ -8,7 +10,7 @@
 
 <div class="text-center">
     <h1 class="display-4">@Localizer["WelcomeMessage"]</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>@Localizer["WelcomeParagraph"]</p>
 </div>
 <div class="row text-center">
     <div class="col-12">
@@ -18,14 +20,58 @@
         <h3>
             @Localizer["SubmitUpload"]
         </h3>
-        @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {   <input type="button" id="loadFileXml" value="Custom Button Name"onclick="document.getElementById('fileInput').click();" />       
-            <input type="file" class="inputfile1" id="fileInput" name="file" value=@Localizer["SubmitUpload"]/><br/>
-            <label for="fileInput">@Localizer["SubmitUpload"]</label>
-            <input type="submit" value=@Localizer["SubmitUpload"]/>          
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#uploadFileTab" type="button" role="tab" aria-controls="pills-home" aria-selected="true">@Localizer["UploadFileTab"]</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#uploadUrlTab" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">@Localizer["UploadUrlTab"]</button>
+            </li>
+        </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="uploadFileTab" role="tabpanel" aria-labelledby="pills-home-tab">
+             @using (Html.AjaxBeginForm("UploadFile", "Home", new AjaxOptions
+        {
+            HttpMethod = "post",
+            UpdateTargetId = "translation"
+        }, new { enctype = "multipart/form-data" }))
+        {   <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="customFileLang" name="file" lang="en"/><br/>
+                    <select class="form-select" name="selectedLang">
+                    @foreach(CultureInfo culture in @ViewBag.Cultures)
+                    {
+                        <option value=@culture.TwoLetterISOLanguageName>@culture.DisplayName</option>
+                    }
+                    </select>
+                    <input type="submit" value=@Localizer["SubmitUpload"] class="btn-primary"/>                       
+            </div>
         }
+        </div>
+        <div class="tab-pane fade" id="uploadUrlTab" role="tabpanel" aria-labelledby="pills-profile-tab">
+             @using (Html.AjaxBeginForm("UploadUrl", "Home", new AjaxOptions
+                {
+                    HttpMethod = "post",
+                    UpdateTargetId = "translation"
+                }, new { enctype = "multipart/form-data" }))
+            {   
+            <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">URL</span>
+                    <input type="text" class="form-control" id="urlInput" name="url" lang="en"/><br/>
+                    <select class="form-select" name="selectedLang">
+                    @foreach(CultureInfo culture in @ViewBag.Cultures)
+                    {
+                        <option value=@culture.TwoLetterISOLanguageName>@culture.DisplayName</option>
+                    }
+                    </select>
+                    <input type="submit" value=@Localizer["SubmitUpload"] class="btn-primary"/>                       
+            </div>
+            }
+        </div>
+    </div>
+       
     </div>
 </div>
 <div class="text-center">
-     <p>@ViewBag.Translation</p>
+     <p id="translation1">@ViewBag.Translation</p>
+     <textarea id="translation" class="form-control" rows=10></textarea>
 </div>
